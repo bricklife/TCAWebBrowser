@@ -50,19 +50,19 @@ struct WebBrowserFeature {
                 
             case .web(.delegate(let delegate)):
                 switch delegate {
-                case .setTitle(let value):
+                case .titleUpdated(let value):
                     state.title = value
                     
-                case .setURL(let url):
+                case .urlUpdated(let url):
                     state.url = url
                     
-                case .setIsLoading(let value):
+                case .isLoadingUpdated(let value):
                     state.isLoading = value
                     
-                case .setCanGoBack(let value):
+                case .canGoBackUpdated(let value):
                     state.canGoBack = value
                     
-                case .setCanGoForward(let value):
+                case .canGoForwardUpdated(let value):
                     state.canGoForward = value
                 }
                 return .none

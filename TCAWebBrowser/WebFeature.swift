@@ -34,11 +34,11 @@ struct WebFeature {
         case dequeueCommand
         
         enum Delegate {
-            case setTitle(String?)
-            case setURL(URL?)
-            case setIsLoading(Bool)
-            case setCanGoBack(Bool)
-            case setCanGoForward(Bool)
+            case titleUpdated(String?)
+            case urlUpdated(URL?)
+            case isLoadingUpdated(Bool)
+            case canGoBackUpdated(Bool)
+            case canGoForwardUpdated(Bool)
         }
     }
     
@@ -126,23 +126,23 @@ struct WebView: ViewRepresentable {
             }
             
             webView.publisher(for: \.isLoading).sink { [store] value in
-                store.send(.delegate(.setIsLoading(value)))
+                store.send(.delegate(.isLoadingUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.url).sink { [store] value in
-                store.send(.delegate(.setURL(value)))
+                store.send(.delegate(.urlUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.title).sink { [store] value in
-                store.send(.delegate(.setTitle(value)))
+                store.send(.delegate(.titleUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoBack).sink { [store] value in
-                store.send(.delegate(.setCanGoBack(value)))
+                store.send(.delegate(.canGoBackUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoForward).sink { [store] value in
-                store.send(.delegate(.setCanGoForward(value)))
+                store.send(.delegate(.canGoForwardUpdated(value)))
             }.store(in: &cancellables)
         }
         
