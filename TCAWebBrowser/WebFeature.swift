@@ -43,6 +43,12 @@ struct WebFeature {
         case setCanGoForward(Bool)
         
         case dequeueCommand
+        
+        case delegate(Delegate)
+        
+        enum Delegate {
+            case didFail(error: Error)
+        }
     }
     
     var body: some ReducerOf<Self> {
@@ -70,6 +76,9 @@ struct WebFeature {
                 
             case .dequeueCommand:
                 state.command = nil
+                return .none
+                
+            case .delegate:
                 return .none
             }
         }
@@ -103,7 +112,7 @@ struct WebView: ViewRepresentable {
         print(#function)
     }
 #endif
-
+    
 #if canImport(AppKit)
     func makeNSView(context: Context) -> WKWebView {
         print(#function)
@@ -172,6 +181,7 @@ struct WebView: ViewRepresentable {
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             print(#function)
+            store.send(.delegate(.didFail(error: error)))
         }
         
         func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -184,6 +194,7 @@ struct WebView: ViewRepresentable {
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             print(#function)
+            store.send(.delegate(.didFail(error: error)))
         }
     }
 }
