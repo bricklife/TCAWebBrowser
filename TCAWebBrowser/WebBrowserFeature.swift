@@ -64,6 +64,9 @@ struct WebBrowserFeature {
                     
                 case .canGoForwardUpdated(let value):
                     state.canGoForward = value
+                    
+                case .didFail(let error):
+                    print(error)
                 }
                 return .none
                 

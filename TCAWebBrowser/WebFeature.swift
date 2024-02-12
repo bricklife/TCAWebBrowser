@@ -39,6 +39,7 @@ struct WebFeature {
             case isLoadingUpdated(Bool)
             case canGoBackUpdated(Bool)
             case canGoForwardUpdated(Bool)
+            case didFail(Error)
         }
     }
     
@@ -152,6 +153,7 @@ struct WebView: ViewRepresentable {
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             print(#function)
+            store.send(.delegate(.didFail(error)))
         }
         
         func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -164,6 +166,7 @@ struct WebView: ViewRepresentable {
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             print(#function)
+            store.send(.delegate(.didFail(error)))
         }
     }
 }
