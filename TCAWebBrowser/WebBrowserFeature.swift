@@ -12,6 +12,8 @@ import SwiftUI
 struct WebBrowserFeature {
     @ObservableState
     struct State: Equatable {
+        var urlString = "https://google.com/"
+        
         var title: String?
         var url: URL?
         var isLoading = false
@@ -28,6 +30,8 @@ struct WebBrowserFeature {
         case goBackButtonTapped
         case goForwardButtonTapped
         case reloadButtonTapped
+        case setUrlString(String)
+        case didEnterUrl
         
         case web(WebFeature.Action)
         
@@ -44,7 +48,7 @@ struct WebBrowserFeature {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return state.web.enqueue(.loadUrl(URL(string: "https://google.com")!)).map(Action.web)
+                return requestUrlString(state: &state)
                 
             case .goBackButtonTapped:
                 return state.web.enqueue(.goBack).map(Action.web)
@@ -53,7 +57,18 @@ struct WebBrowserFeature {
                 return state.web.enqueue(.goForward).map(Action.web)
                 
             case .reloadButtonTapped:
-                return state.web.enqueue(.reload).map(Action.web)
+                if state.url == nil {
+                    return requestUrlString(state: &state)
+                } else {
+                    return state.web.enqueue(.reload).map(Action.web)
+                }
+                
+            case .setUrlString(let urlString):
+                state.urlString = urlString
+                return .none
+                
+            case .didEnterUrl:
+                return requestUrlString(state: &state)
                 
             case .web(.delegate(let delegate)):
                 switch delegate {
@@ -62,6 +77,9 @@ struct WebBrowserFeature {
                     
                 case .urlUpdated(let url):
                     state.url = url
+                    if let url {
+                        state.urlString = url.absoluteString
+                    }
                     
                 case .isLoadingUpdated(let value):
                     state.isLoading = value
@@ -94,6 +112,11 @@ struct WebBrowserFeature {
         }
         .ifLet(\.$alert, action: \.alert)
     }
+    
+    func requestUrlString(state: inout State) -> Effect<Action> {
+        guard let url = URL(string: state.urlString) else { return .none }
+        return state.web.enqueue(.loadUrl(url)).map(Action.web)
+    }
 }
 
 struct WebBrowserView: View {
@@ -116,8 +139,11 @@ struct WebBrowserView: View {
                 }
                 .disabled(!store.canGoForward)
                 
-                Text(store.title ?? "")
-                    .lineLimit(1)
+                TextField("URL", text: $store.urlString.sending(\.setUrlString), onCommit: {
+                    store.send(.didEnterUrl)
+                })
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
                 
                 Spacer()
                 
