@@ -14,12 +14,6 @@ import WebKit
 struct WebFeature {
     @ObservableState
     struct State: Equatable {
-        var title: String?
-        var url: URL?
-        var isLoading = false
-        var canGoBack = false
-        var canGoForward = false
-        
         fileprivate var command: Command?
         
         enum Command: Equatable {
@@ -36,36 +30,22 @@ struct WebFeature {
     }
     
     enum Action {
-        case setTitle(String?)
-        case setURL(URL?)
-        case setIsLoading(Bool)
-        case setCanGoBack(Bool)
-        case setCanGoForward(Bool)
-        
+        case delegate(Delegate)
         case dequeueCommand
+        
+        enum Delegate {
+            case setTitle(String?)
+            case setURL(URL?)
+            case setIsLoading(Bool)
+            case setCanGoBack(Bool)
+            case setCanGoForward(Bool)
+        }
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .setTitle(let value):
-                state.title = value
-                return .none
-                
-            case .setURL(let url):
-                state.url = url
-                return .none
-                
-            case .setIsLoading(let value):
-                state.isLoading = value
-                return .none
-                
-            case .setCanGoBack(let value):
-                state.canGoBack = value
-                return .none
-                
-            case .setCanGoForward(let value):
-                state.canGoForward = value
+            case .delegate:
                 return .none
                 
             case .dequeueCommand:
@@ -103,7 +83,7 @@ struct WebView: ViewRepresentable {
         print(#function)
     }
 #endif
-
+    
 #if canImport(AppKit)
     func makeNSView(context: Context) -> WKWebView {
         print(#function)
@@ -146,23 +126,23 @@ struct WebView: ViewRepresentable {
             }
             
             webView.publisher(for: \.isLoading).sink { [store] value in
-                store.send(.setIsLoading(value))
+                store.send(.delegate(.setIsLoading(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.url).sink { [store] value in
-                store.send(.setURL(value))
+                store.send(.delegate(.setURL(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.title).sink { [store] value in
-                store.send(.setTitle(value))
+                store.send(.delegate(.setTitle(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoBack).sink { [store] value in
-                store.send(.setCanGoBack(value))
+                store.send(.delegate(.setCanGoBack(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoForward).sink { [store] value in
-                store.send(.setCanGoForward(value))
+                store.send(.delegate(.setCanGoForward(value)))
             }.store(in: &cancellables)
         }
         

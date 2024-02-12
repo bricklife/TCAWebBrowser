@@ -12,6 +12,12 @@ import SwiftUI
 struct WebBrowserFeature {
     @ObservableState
     struct State: Equatable {
+        var title: String?
+        var url: URL?
+        var isLoading = false
+        var canGoBack = false
+        var canGoForward = false
+        
         var web = WebFeature.State()
     }
     
@@ -42,6 +48,25 @@ struct WebBrowserFeature {
             case .reloadButtonTapped:
                 return state.web.enqueue(.reload).map(Action.web)
                 
+            case .web(.delegate(let delegate)):
+                switch delegate {
+                case .setTitle(let value):
+                    state.title = value
+                    
+                case .setURL(let url):
+                    state.url = url
+                    
+                case .setIsLoading(let value):
+                    state.isLoading = value
+                    
+                case .setCanGoBack(let value):
+                    state.canGoBack = value
+                    
+                case .setCanGoForward(let value):
+                    state.canGoForward = value
+                }
+                return .none
+                
             case .web:
                 return .none
             }
@@ -60,21 +85,21 @@ struct WebBrowserView: View {
                 } label: {
                     Image(systemName: "chevron.backward")
                 }
-                .disabled(!store.web.canGoBack)
+                .disabled(!store.canGoBack)
                 
                 Button {
                     store.send(.goForwardButtonTapped)
                 } label: {
                     Image(systemName: "chevron.forward")
                 }
-                .disabled(!store.web.canGoForward)
+                .disabled(!store.canGoForward)
                 
-                Text(store.web.title ?? "")
+                Text(store.title ?? "")
                     .lineLimit(1)
                 
                 Spacer()
                 
-                if store.web.isLoading {
+                if store.isLoading {
                     ProgressView()
                         .progressViewStyle(.circular)
                 }
@@ -84,7 +109,7 @@ struct WebBrowserView: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                 }
-                .disabled(store.web.isLoading)
+                .disabled(store.isLoading)
             }
             .padding()
             
