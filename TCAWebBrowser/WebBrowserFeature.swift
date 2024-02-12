@@ -13,6 +13,8 @@ struct WebBrowserFeature {
     @ObservableState
     struct State: Equatable {
         var web = WebFeature.State()
+        
+        @Presents var alert: AlertState<Action.Alert>?
     }
     
     enum Action {
@@ -22,6 +24,11 @@ struct WebBrowserFeature {
         case reloadButtonTapped
         
         case web(WebFeature.Action)
+        
+        case alert(PresentationAction<Alert>)
+        
+        enum Alert: Equatable {
+        }
     }
     
     var body: some ReducerOf<Self> {
@@ -42,15 +49,31 @@ struct WebBrowserFeature {
             case .reloadButtonTapped:
                 return state.web.enqueue(.reload).map(Action.web)
                 
+            case .web(.delegate(.didFail(error: let error))):
+                state.alert = AlertState {
+                    TextState("Error")
+                } actions: {
+                    ButtonState {
+                        TextState("OK")
+                    }
+                } message: {
+                    TextState((error as NSError).localizedDescription)
+                }
+                return .none
+                
             case .web:
+                return .none
+                
+            case .alert:
                 return .none
             }
         }
+        .ifLet(\.$alert, action: \.alert)
     }
 }
 
 struct WebBrowserView: View {
-    let store: StoreOf<WebBrowserFeature>
+    @Bindable var store: StoreOf<WebBrowserFeature>
     
     var body: some View {
         VStack(spacing: 0) {
@@ -91,6 +114,7 @@ struct WebBrowserView: View {
             WebView(store: store.scope(state: \.web, action: \.web))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .alert($store.scope(state: \.alert, action: \.alert))
         .onAppear {
             store.send(.onAppear)
         }
