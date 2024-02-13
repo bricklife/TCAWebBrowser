@@ -25,6 +25,7 @@ struct WebFeature {
         enum Command: Equatable {
             case loadUrl(URL)
             case reload
+            case stopLoading
             case goBack
             case goForward
         }
@@ -149,6 +150,8 @@ struct WebView: ViewRepresentable {
                     webView?.load(URLRequest(url: url))
                 case .reload:
                     webView?.reload()
+                case .stopLoading:
+                    webView?.stopLoading()
                 case .goBack:
                     webView?.goBack()
                 case .goForward:

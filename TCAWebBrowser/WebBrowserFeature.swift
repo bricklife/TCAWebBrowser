@@ -24,6 +24,7 @@ struct WebBrowserFeature {
         case goBackButtonTapped
         case goForwardButtonTapped
         case reloadButtonTapped
+        case stopButtonTapped
         case setLocation(String)
         case didCommitLocation
         
@@ -56,6 +57,9 @@ struct WebBrowserFeature {
                 } else {
                     return state.web.enqueue(.reload).map(Action.web)
                 }
+                
+            case .stopButtonTapped:
+                return state.web.enqueue(.stopLoading).map(Action.web)
                 
             case .setLocation(let urlString):
                 state.location = urlString
@@ -129,12 +133,19 @@ struct WebBrowserView: View {
                     .progressViewStyle(.circular)
                     .opacity(store.web.isLoading ? 1 : 0)
                 
-                Button {
-                    store.send(.reloadButtonTapped)
-                } label: {
-                    Image(systemName: "arrow.clockwise")
+                if store.web.isLoading {
+                    Button {
+                        store.send(.stopButtonTapped)
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                } else {
+                    Button {
+                        store.send(.reloadButtonTapped)
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
                 }
-                .disabled(store.web.isLoading)
             }
             .padding()
             
