@@ -47,6 +47,7 @@ struct WebFeature {
         case delegate(Delegate)
         
         enum Delegate {
+            case urlUpdated(URL?)
             case didFail(error: Error)
         }
     }
@@ -60,7 +61,9 @@ struct WebFeature {
                 
             case .setURL(let url):
                 state.url = url
-                return .none
+                return .run { send in
+                    await send(.delegate(.urlUpdated(url)))
+                }
                 
             case .setIsLoading(let value):
                 state.isLoading = value

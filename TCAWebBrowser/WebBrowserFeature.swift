@@ -12,6 +12,8 @@ import SwiftUI
 struct WebBrowserFeature {
     @ObservableState
     struct State: Equatable {
+        var location = "https://google.com/"
+        
         var web = WebFeature.State()
         
         @Presents var alert: AlertState<Action.Alert>?
@@ -22,6 +24,8 @@ struct WebBrowserFeature {
         case goBackButtonTapped
         case goForwardButtonTapped
         case reloadButtonTapped
+        case setLocation(String)
+        case didCommitLocation
         
         case web(WebFeature.Action)
         
@@ -38,7 +42,7 @@ struct WebBrowserFeature {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return state.web.enqueue(.loadUrl(URL(string: "https://google.com")!)).map(Action.web)
+                return requestUrlString(state: &state)
                 
             case .goBackButtonTapped:
                 return state.web.enqueue(.goBack).map(Action.web)
@@ -47,7 +51,24 @@ struct WebBrowserFeature {
                 return state.web.enqueue(.goForward).map(Action.web)
                 
             case .reloadButtonTapped:
-                return state.web.enqueue(.reload).map(Action.web)
+                if state.location != state.web.url?.absoluteString {
+                    return requestUrlString(state: &state)
+                } else {
+                    return state.web.enqueue(.reload).map(Action.web)
+                }
+                
+            case .setLocation(let urlString):
+                state.location = urlString
+                return .none
+                
+            case .didCommitLocation:
+                return requestUrlString(state: &state)
+                
+            case .web(.delegate(.urlUpdated(let url))):
+                if let url {
+                    state.location = url.absoluteString
+                }
+                return .none
                 
             case .web(.delegate(.didFail(error: let error))):
                 state.alert = AlertState {
@@ -69,6 +90,11 @@ struct WebBrowserFeature {
             }
         }
         .ifLet(\.$alert, action: \.alert)
+    }
+    
+    private func requestUrlString(state: inout State) -> Effect<Action> {
+        guard let url = URL(string: state.location) else { return .none }
+        return state.web.enqueue(.loadUrl(url)).map(Action.web)
     }
 }
 
@@ -92,15 +118,16 @@ struct WebBrowserView: View {
                 }
                 .disabled(!store.web.canGoForward)
                 
-                Text(store.web.title ?? "")
-                    .lineLimit(1)
+                TextField("URL", text: $store.location.sending(\.setLocation), onCommit: {
+                    store.send(.didCommitLocation)
+                })
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .frame(maxWidth: .infinity)
                 
-                Spacer()
-                
-                if store.web.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .opacity(store.web.isLoading ? 1 : 0)
                 
                 Button {
                     store.send(.reloadButtonTapped)
