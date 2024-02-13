@@ -37,18 +37,16 @@ struct WebFeature {
     }
     
     enum Action {
-        case setTitle(String?)
-        case setURL(URL?)
-        case setIsLoading(Bool)
-        case setCanGoBack(Bool)
-        case setCanGoForward(Bool)
-        
         case dequeueCommand
         
         case delegate(Delegate)
         
         enum Delegate {
+            case titleUpdated(String?)
             case urlUpdated(URL?)
+            case isLoadingUpdated(Bool)
+            case canGoBackUpdated(Bool)
+            case canGoForwardUpdated(Bool)
             case didFail(error: Error)
         }
     }
@@ -56,30 +54,28 @@ struct WebFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .setTitle(let value):
+            case .dequeueCommand:
+                state.command = nil
+                return .none
+                
+            case .delegate(.titleUpdated(let value)):
                 state.title = value
                 return .none
                 
-            case .setURL(let url):
-                state.url = url
-                return .run { send in
-                    await send(.delegate(.urlUpdated(url)))
-                }
+            case .delegate(.urlUpdated(let value)):
+                state.url = value
+                return .none
                 
-            case .setIsLoading(let value):
+            case .delegate(.isLoadingUpdated(let value)):
                 state.isLoading = value
                 return .none
                 
-            case .setCanGoBack(let value):
+            case .delegate(.canGoBackUpdated(let value)):
                 state.canGoBack = value
                 return .none
                 
-            case .setCanGoForward(let value):
+            case .delegate(.canGoForwardUpdated(let value)):
                 state.canGoForward = value
-                return .none
-                
-            case .dequeueCommand:
-                state.command = nil
                 return .none
                 
             case .delegate:
@@ -161,23 +157,23 @@ struct WebView: ViewRepresentable {
             }
             
             webView.publisher(for: \.isLoading).sink { [store] value in
-                store.send(.setIsLoading(value))
+                store.send(.delegate(.isLoadingUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.url).sink { [store] value in
-                store.send(.setURL(value))
+                store.send(.delegate(.urlUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.title).sink { [store] value in
-                store.send(.setTitle(value))
+                store.send(.delegate(.titleUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoBack).sink { [store] value in
-                store.send(.setCanGoBack(value))
+                store.send(.delegate(.canGoBackUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoForward).sink { [store] value in
-                store.send(.setCanGoForward(value))
+                store.send(.delegate(.canGoForwardUpdated(value)))
             }.store(in: &cancellables)
         }
         
