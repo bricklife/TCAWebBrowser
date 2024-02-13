@@ -156,16 +156,16 @@ struct WebView: ViewRepresentable {
                 self?.store.send(.dequeueCommand)
             }
             
-            webView.publisher(for: \.isLoading).sink { [store] value in
-                store.send(.delegate(.isLoadingUpdated(value)))
+            webView.publisher(for: \.title).sink { [store] value in
+                store.send(.delegate(.titleUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.url).sink { [store] value in
                 store.send(.delegate(.urlUpdated(value)))
             }.store(in: &cancellables)
             
-            webView.publisher(for: \.title).sink { [store] value in
-                store.send(.delegate(.titleUpdated(value)))
+            webView.publisher(for: \.isLoading).sink { [store] value in
+                store.send(.delegate(.isLoadingUpdated(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoBack).sink { [store] value in

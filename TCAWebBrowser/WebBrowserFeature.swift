@@ -23,10 +23,10 @@ struct WebBrowserFeature {
         case onAppear
         case goBackButtonTapped
         case goForwardButtonTapped
-        case reloadButtonTapped
-        case stopButtonTapped
         case setLocation(String)
         case didCommitLocation
+        case reloadButtonTapped
+        case stopButtonTapped
         
         case web(WebFeature.Action)
         
@@ -51,6 +51,13 @@ struct WebBrowserFeature {
             case .goForwardButtonTapped:
                 return state.web.enqueue(.goForward).map(Action.web)
                 
+            case .setLocation(let urlString):
+                state.location = urlString
+                return .none
+                
+            case .didCommitLocation:
+                return requestUrlString(state: &state)
+                
             case .reloadButtonTapped:
                 if state.location != state.web.url?.absoluteString {
                     return requestUrlString(state: &state)
@@ -60,13 +67,6 @@ struct WebBrowserFeature {
                 
             case .stopButtonTapped:
                 return state.web.enqueue(.stopLoading).map(Action.web)
-                
-            case .setLocation(let urlString):
-                state.location = urlString
-                return .none
-                
-            case .didCommitLocation:
-                return requestUrlString(state: &state)
                 
             case .web(.delegate(.urlUpdated(let url))):
                 if let url {
