@@ -10,13 +10,11 @@ import SwiftUI
 
 @main
 struct TCAWebBrowserApp: App {
-    static let store = Store(initialState: WebBrowserFeature.State()) {
-        WebBrowserFeature()
-    }
-    
     var body: some Scene {
-        WindowGroup(id: "browser") {
-            WebBrowserView(store: Self.store)
+        WindowGroup(for: URL.self) { url in
+            WebBrowserView(store: Store(initialState: WebBrowserFeature.State(url: url.wrappedValue)) {
+                WebBrowserFeature()
+            })
         }
     }
 }

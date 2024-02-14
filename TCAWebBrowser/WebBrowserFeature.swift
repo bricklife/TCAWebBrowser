@@ -12,11 +12,15 @@ import SwiftUI
 struct WebBrowserFeature {
     @ObservableState
     struct State: Equatable {
-        var location = "https://google.com/"
+        var location: String
         
         var web = WebFeature.State()
         
         @Presents var alert: AlertState<Action.Alert>?
+        
+        init(url: URL? = nil) {
+            self.location = url?.absoluteString ?? "https://google.com"
+        }
     }
     
     enum Action {
