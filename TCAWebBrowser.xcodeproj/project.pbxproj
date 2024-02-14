@@ -13,7 +13,18 @@
 		CB3B360B2B79BC6F00627C62 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB3B360A2B79BC6F00627C62 /* Preview Assets.xcassets */; };
 		CB3B36132B79BCA300627C62 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = CB3B36122B79BCA300627C62 /* ComposableArchitecture */; };
 		CB3B36152B79BCB700627C62 /* WebFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3B36142B79BCB700627C62 /* WebFeature.swift */; };
+		CBED69002B7C53C700E95D0D /* TCAWebBrowserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBED68FF2B7C53C700E95D0D /* TCAWebBrowserTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CBED69012B7C53C700E95D0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B35F72B79BC6E00627C62 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB3B35FE2B79BC6E00627C62;
+			remoteInfo = TCAWebBrowser;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CB3B35FF2B79BC6E00627C62 /* TCAWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCAWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -23,6 +34,8 @@
 		CB3B36082B79BC6F00627C62 /* TCAWebBrowser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TCAWebBrowser.entitlements; sourceTree = "<group>"; };
 		CB3B360A2B79BC6F00627C62 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CB3B36142B79BCB700627C62 /* WebFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFeature.swift; sourceTree = "<group>"; };
+		CBED68FD2B7C53C600E95D0D /* TCAWebBrowserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCAWebBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBED68FF2B7C53C700E95D0D /* TCAWebBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCAWebBrowserTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +47,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBED68FA2B7C53C600E95D0D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -41,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				CB3B36012B79BC6E00627C62 /* TCAWebBrowser */,
+				CBED68FE2B7C53C700E95D0D /* TCAWebBrowserTests */,
 				CB3B36002B79BC6E00627C62 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				CB3B35FF2B79BC6E00627C62 /* TCAWebBrowser.app */,
+				CBED68FD2B7C53C600E95D0D /* TCAWebBrowserTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +96,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		CBED68FE2B7C53C700E95D0D /* TCAWebBrowserTests */ = {
+			isa = PBXGroup;
+			children = (
+				CBED68FF2B7C53C700E95D0D /* TCAWebBrowserTests.swift */,
+			);
+			path = TCAWebBrowserTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -97,6 +127,24 @@
 			productReference = CB3B35FF2B79BC6E00627C62 /* TCAWebBrowser.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CBED68FC2B7C53C600E95D0D /* TCAWebBrowserTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBED69032B7C53C700E95D0D /* Build configuration list for PBXNativeTarget "TCAWebBrowserTests" */;
+			buildPhases = (
+				CBED68F92B7C53C600E95D0D /* Sources */,
+				CBED68FA2B7C53C600E95D0D /* Frameworks */,
+				CBED68FB2B7C53C600E95D0D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CBED69022B7C53C700E95D0D /* PBXTargetDependency */,
+			);
+			name = TCAWebBrowserTests;
+			productName = TCAWebBrowserTests;
+			productReference = CBED68FD2B7C53C600E95D0D /* TCAWebBrowserTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -109,6 +157,10 @@
 				TargetAttributes = {
 					CB3B35FE2B79BC6E00627C62 = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					CBED68FC2B7C53C600E95D0D = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = CB3B35FE2B79BC6E00627C62;
 					};
 				};
 			};
@@ -129,6 +181,7 @@
 			projectRoot = "";
 			targets = (
 				CB3B35FE2B79BC6E00627C62 /* TCAWebBrowser */,
+				CBED68FC2B7C53C600E95D0D /* TCAWebBrowserTests */,
 			);
 		};
 /* End PBXProject section */
@@ -140,6 +193,13 @@
 			files = (
 				CB3B360B2B79BC6F00627C62 /* Preview Assets.xcassets in Resources */,
 				CB3B36072B79BC6F00627C62 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBED68FB2B7C53C600E95D0D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,7 +216,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBED68F92B7C53C600E95D0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBED69002B7C53C700E95D0D /* TCAWebBrowserTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CBED69022B7C53C700E95D0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB3B35FE2B79BC6E00627C62 /* TCAWebBrowser */;
+			targetProxy = CBED69012B7C53C700E95D0D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CB3B360C2B79BC6F00627C62 /* Debug */ = {
@@ -349,6 +425,50 @@
 			};
 			name = Release;
 		};
+		CBED69042B7C53C700E95D0D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UV6TAX3ANB;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bricklife.TCAWebBrowserTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCAWebBrowser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TCAWebBrowser";
+			};
+			name = Debug;
+		};
+		CBED69052B7C53C700E95D0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UV6TAX3ANB;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bricklife.TCAWebBrowserTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCAWebBrowser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TCAWebBrowser";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -366,6 +486,15 @@
 			buildConfigurations = (
 				CB3B360F2B79BC6F00627C62 /* Debug */,
 				CB3B36102B79BC6F00627C62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CBED69032B7C53C700E95D0D /* Build configuration list for PBXNativeTarget "TCAWebBrowserTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBED69042B7C53C700E95D0D /* Debug */,
+				CBED69052B7C53C700E95D0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

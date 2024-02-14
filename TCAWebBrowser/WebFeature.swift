@@ -20,7 +20,7 @@ struct WebFeature {
         var canGoBack = false
         var canGoForward = false
         
-        fileprivate var command: Command?
+        var command: Command?
         
         enum Command: Equatable {
             case loadUrl(URL)
