@@ -129,8 +129,10 @@ struct WebBrowserView: View {
                 TextField("URL", text: $store.location.sending(\.setLocation), onCommit: {
                     store.send(.didCommitLocation)
                 })
+#if !os(macOS)
                 .keyboardType(.URL)
                 .textInputAutocapitalization(.never)
+#endif
                 .frame(maxWidth: .infinity)
                 
                 ProgressView()
