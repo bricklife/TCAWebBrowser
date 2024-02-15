@@ -72,7 +72,7 @@ struct WebBrowserFeature {
             case .stopButtonTapped:
                 return state.web.enqueue(.stopLoading).map(Action.web)
                 
-            case .web(.delegate(.urlUpdated(let url))):
+            case .web(.delegate(.didUpdateURL(let url))):
                 if let url {
                     state.location = url.absoluteString
                 }

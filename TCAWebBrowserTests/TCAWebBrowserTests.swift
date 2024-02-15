@@ -30,12 +30,12 @@ final class TCAWebBrowserTests: XCTestCase {
         }
         
         let newUrl = URL(string: "https://www.yahoo.com")!
-        await store.send(.web(.delegate(.urlUpdated(newUrl)))) {
+        await store.send(.web(.delegate(.didUpdateURL(newUrl)))) {
             $0.web.url = newUrl
             $0.location = newUrl.absoluteString
         }
         
-        await store.send(.web(.delegate(.urlUpdated(nil)))) {
+        await store.send(.web(.delegate(.didUpdateURL(nil)))) {
             $0.web.url = nil
         }
     }
@@ -53,7 +53,7 @@ final class TCAWebBrowserTests: XCTestCase {
             $0.web.command = .loadUrl(url)
         }
         
-        await store.send(.web(.delegate(.urlUpdated(url)))) {
+        await store.send(.web(.delegate(.didUpdateURL(url)))) {
             $0.web.url = url
         }
         await store.send(.reloadButtonTapped) {

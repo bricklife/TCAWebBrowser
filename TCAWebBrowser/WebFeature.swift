@@ -42,11 +42,11 @@ struct WebFeature {
         case delegate(Delegate)
         
         enum Delegate {
-            case titleUpdated(String?)
-            case urlUpdated(URL?)
-            case isLoadingUpdated(Bool)
-            case canGoBackUpdated(Bool)
-            case canGoForwardUpdated(Bool)
+            case didUpdateTitle(String?)
+            case didUpdateURL(URL?)
+            case didUpdateisLoading(Bool)
+            case didUpdatecanGoBack(Bool)
+            case didUpdatecanGoForward(Bool)
             case didFail(error: Error)
         }
     }
@@ -58,23 +58,23 @@ struct WebFeature {
                 state.command = nil
                 return .none
                 
-            case .delegate(.titleUpdated(let value)):
+            case .delegate(.didUpdateTitle(let value)):
                 state.title = value
                 return .none
                 
-            case .delegate(.urlUpdated(let value)):
+            case .delegate(.didUpdateURL(let value)):
                 state.url = value
                 return .none
                 
-            case .delegate(.isLoadingUpdated(let value)):
+            case .delegate(.didUpdateisLoading(let value)):
                 state.isLoading = value
                 return .none
                 
-            case .delegate(.canGoBackUpdated(let value)):
+            case .delegate(.didUpdatecanGoBack(let value)):
                 state.canGoBack = value
                 return .none
                 
-            case .delegate(.canGoForwardUpdated(let value)):
+            case .delegate(.didUpdatecanGoForward(let value)):
                 state.canGoForward = value
                 return .none
                 
@@ -157,23 +157,23 @@ struct WebView: ViewRepresentable {
             }
             
             webView.publisher(for: \.title).sink { [store] value in
-                store.send(.delegate(.titleUpdated(value)))
+                store.send(.delegate(.didUpdateTitle(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.url).sink { [store] value in
-                store.send(.delegate(.urlUpdated(value)))
+                store.send(.delegate(.didUpdateURL(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.isLoading).sink { [store] value in
-                store.send(.delegate(.isLoadingUpdated(value)))
+                store.send(.delegate(.didUpdateisLoading(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoBack).sink { [store] value in
-                store.send(.delegate(.canGoBackUpdated(value)))
+                store.send(.delegate(.didUpdatecanGoBack(value)))
             }.store(in: &cancellables)
             
             webView.publisher(for: \.canGoForward).sink { [store] value in
-                store.send(.delegate(.canGoForwardUpdated(value)))
+                store.send(.delegate(.didUpdatecanGoForward(value)))
             }.store(in: &cancellables)
         }
         
