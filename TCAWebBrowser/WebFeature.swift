@@ -100,7 +100,6 @@ struct WebView: ViewRepresentable {
         return Coordinator(store: store)
     }
     
-#if canImport(UIKit)
     func makeUIView(context: Context) -> WKWebView {
         print(#function)
         let webView = WKWebView()
@@ -111,9 +110,7 @@ struct WebView: ViewRepresentable {
     func updateUIView(_ webView: WKWebView, context: Context) {
         print(#function)
     }
-#endif
     
-#if canImport(AppKit)
     func makeNSView(context: Context) -> WKWebView {
         print(#function)
         let webView = WKWebView()
@@ -124,8 +121,9 @@ struct WebView: ViewRepresentable {
     func updateNSView(_ webView: WKWebView, context: Context) {
         print(#function)
     }
-#endif
-    
+}
+
+extension WebView {
     class Coordinator: NSObject, WKNavigationDelegate {
         private let store: StoreOf<WebFeature>
         
