@@ -68,4 +68,16 @@ final class TCAWebBrowserTests: XCTestCase {
             $0.web.command = .loadUrl(newUrl)
         }
     }
+    
+    func testDidFail() async {
+        let store = TestStore(initialState: WebBrowserFeature.State()) {
+            WebBrowserFeature()
+        }
+        
+        let error = NSError(domain: "", code: 0)
+        
+        await store.send(.web(.delegate(.didFail(error: error)))) {
+            $0.alert = .didFail(error: error)
+        }
+    }
 }

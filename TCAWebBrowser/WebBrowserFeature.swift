@@ -79,15 +79,7 @@ struct WebBrowserFeature {
                 return .none
                 
             case .web(.delegate(.didFail(error: let error))):
-                state.alert = AlertState {
-                    TextState("Error")
-                } actions: {
-                    ButtonState {
-                        TextState("OK")
-                    }
-                } message: {
-                    TextState((error as NSError).localizedDescription)
-                }
+                state.alert = .didFail(error: error)
                 return .none
                 
             case .web:
@@ -103,6 +95,20 @@ struct WebBrowserFeature {
     private func requestUrlString(state: inout State) -> Effect<Action> {
         guard let url = URL(string: state.location) else { return .none }
         return state.web.enqueue(.loadUrl(url)).map(Action.web)
+    }
+}
+
+extension AlertState where Action == WebBrowserFeature.Action.Alert {
+    static func didFail(error: Error) -> Self {
+        Self {
+            TextState("Error")
+        } actions: {
+            ButtonState {
+                TextState("OK")
+            }
+        } message: {
+            TextState((error as NSError).localizedDescription)
+        }
     }
 }
 
