@@ -11,8 +11,8 @@ import SwiftUI
 @main
 struct TCAWebBrowserApp: App {
     var body: some Scene {
-        WindowGroup(for: URL.self) { url in
-            WebBrowserView(store: Store(initialState: WebBrowserFeature.State(url: url.wrappedValue)) {
+        WindowGroup(for: URL.self) { $url in
+            WebBrowserView(store: Store(initialState: WebBrowserFeature.State(url: url)) {
                 WebBrowserFeature()
             })
         }
