@@ -168,6 +168,18 @@ struct WebBrowserView: View {
         .onAppear {
             store.send(.onAppear)
         }
+        .focusedSceneValue(\.webBrowserFeatureStore, store)
+    }
+}
+
+struct WebBrowserFeatureStoreKey: FocusedValueKey {
+    typealias Value = StoreOf<WebBrowserFeature>
+}
+
+extension FocusedValues {
+    var webBrowserFeatureStore: StoreOf<WebBrowserFeature>? {
+        get { self[WebBrowserFeatureStoreKey.self] }
+        set { self[WebBrowserFeatureStoreKey.self] = newValue }
     }
 }
 
