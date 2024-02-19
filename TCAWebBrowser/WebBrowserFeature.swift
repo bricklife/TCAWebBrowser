@@ -41,6 +41,8 @@ struct WebBrowserFeature {
         enum Alert: Equatable {
         }
         enum FileMover: Equatable {
+            case completed
+            case failed
         }
     }
     
@@ -83,7 +85,7 @@ struct WebBrowserFeature {
                 return .none
                 
             case .web(.delegate(.didDownloadFile(at: let url))):
-                state.fileMover = FileMoverState(url: url)
+                state.fileMover = FileMoverState(url: url, completed: .completed, failed: .failed)
                 return .none
                 
             case .web(.delegate(.didFail(error: let error))):
@@ -96,7 +98,8 @@ struct WebBrowserFeature {
             case .alert:
                 return .none
                 
-            case .fileMover:
+            case .fileMover(let value):
+                print(value)
                 return .none
             }
         }
