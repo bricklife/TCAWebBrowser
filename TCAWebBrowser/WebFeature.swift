@@ -47,6 +47,7 @@ struct WebFeature {
             case didUpdateisLoading(Bool)
             case didUpdatecanGoBack(Bool)
             case didUpdatecanGoForward(Bool)
+            case didDownloadFile(at: URL)
             case didFail(error: Error)
         }
     }
@@ -124,10 +125,12 @@ struct WebView: ViewRepresentable {
 }
 
 extension WebView {
-    class Coordinator: NSObject, WKNavigationDelegate {
+    class Coordinator: NSObject, WKNavigationDelegate, WKDownloadDelegate {
         private let store: StoreOf<WebFeature>
         
         private var cancellables = Set<AnyCancellable>()
+        
+        private var downloadingURL: URL?
         
         init(store: StoreOf<WebFeature>) {
             self.store = store
@@ -175,6 +178,20 @@ extension WebView {
             }.store(in: &cancellables)
         }
         
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+            print(#function)
+            if navigationAction.shouldPerformDownload {
+                return .download
+            } else {
+                return .allow
+            }
+        }
+        
+        func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+            print(#function)
+            download.delegate = self
+        }
+        
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
             print(#function)
         }
@@ -193,6 +210,28 @@ extension WebView {
         }
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            print(#function)
+            store.send(.delegate(.didFail(error: error)))
+        }
+        
+        func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String) async -> URL? {
+            print(#function)
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(suggestedFilename)
+            if FileManager.default.fileExists(atPath: url.path) {
+                try? FileManager.default.removeItem(atPath: url.path)
+            }
+            downloadingURL = url
+            return url
+        }
+        
+        func downloadDidFinish(_ download: WKDownload) {
+            print(#function)
+            if let downloadingURL {
+                store.send(.delegate(.didDownloadFile(at: downloadingURL)))
+            }
+        }
+        
+        func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
             print(#function)
             store.send(.delegate(.didFail(error: error)))
         }
