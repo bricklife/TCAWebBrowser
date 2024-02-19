@@ -14,6 +14,7 @@
 		CB3B36132B79BCA300627C62 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = CB3B36122B79BCA300627C62 /* ComposableArchitecture */; };
 		CB3B36152B79BCB700627C62 /* WebFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3B36142B79BCB700627C62 /* WebFeature.swift */; };
 		CBED69002B7C53C700E95D0D /* TCAWebBrowserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBED68FF2B7C53C700E95D0D /* TCAWebBrowserTests.swift */; };
+		CBF9696E2B82F9E700201FE2 /* FileMover.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBF9696D2B82F9E700201FE2 /* FileMover.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		CB3B36142B79BCB700627C62 /* WebFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFeature.swift; sourceTree = "<group>"; };
 		CBED68FD2B7C53C600E95D0D /* TCAWebBrowserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCAWebBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBED68FF2B7C53C700E95D0D /* TCAWebBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCAWebBrowserTests.swift; sourceTree = "<group>"; };
+		CBF9696D2B82F9E700201FE2 /* FileMover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMover.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				CB3B36022B79BC6E00627C62 /* TCAWebBrowserApp.swift */,
 				CB3B36042B79BC6E00627C62 /* WebBrowserFeature.swift */,
 				CB3B36142B79BCB700627C62 /* WebFeature.swift */,
+				CBF9696D2B82F9E700201FE2 /* FileMover.swift */,
 				CB3B36062B79BC6F00627C62 /* Assets.xcassets */,
 				CB3B36082B79BC6F00627C62 /* TCAWebBrowser.entitlements */,
 				CB3B36092B79BC6F00627C62 /* Preview Content */,
@@ -211,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB3B36052B79BC6E00627C62 /* WebBrowserFeature.swift in Sources */,
+				CBF9696E2B82F9E700201FE2 /* FileMover.swift in Sources */,
 				CB3B36032B79BC6E00627C62 /* TCAWebBrowserApp.swift in Sources */,
 				CB3B36152B79BCB700627C62 /* WebFeature.swift in Sources */,
 			);

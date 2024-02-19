@@ -17,6 +17,7 @@ struct WebBrowserFeature {
         var web = WebFeature.State()
         
         @Presents var alert: AlertState<Action.Alert>?
+        @Presents var fileMover: FileMoverState<Action.FileMover>?
         
         init(url: URL? = nil) {
             self.location = url?.absoluteString ?? "https://google.com"
@@ -35,8 +36,11 @@ struct WebBrowserFeature {
         case web(WebFeature.Action)
         
         case alert(PresentationAction<Alert>)
+        case fileMover(PresentationAction<FileMover>)
         
         enum Alert: Equatable {
+        }
+        enum FileMover: Equatable {
         }
     }
     
@@ -78,6 +82,10 @@ struct WebBrowserFeature {
                 }
                 return .none
                 
+            case .web(.delegate(.didDownloadFile(at: let url))):
+                state.fileMover = FileMoverState(url: url)
+                return .none
+                
             case .web(.delegate(.didFail(error: let error))):
                 state.alert = .didFail(error: error)
                 return .none
@@ -87,9 +95,13 @@ struct WebBrowserFeature {
                 
             case .alert:
                 return .none
+                
+            case .fileMover:
+                return .none
             }
         }
         .ifLet(\.$alert, action: \.alert)
+        .ifLet(\.$fileMover, action: \.fileMover)
     }
     
     private func requestUrlString(state: inout State) -> Effect<Action> {
@@ -165,6 +177,7 @@ struct WebBrowserView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .alert($store.scope(state: \.alert, action: \.alert))
+        .fileMover($store.scope(state: \.fileMover, action: \.fileMover))
         .onAppear {
             store.send(.onAppear)
         }
