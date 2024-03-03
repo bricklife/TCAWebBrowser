@@ -10,8 +10,8 @@ import XCTest
 
 @testable import TCAWebBrowser
 
-@MainActor
 final class TCAWebBrowserTests: XCTestCase {
+    @MainActor
     func testLoadUrl() async {
         let store = TestStore(initialState: WebBrowserFeature.State()) {
             WebBrowserFeature()
@@ -40,6 +40,7 @@ final class TCAWebBrowserTests: XCTestCase {
         }
     }
     
+    @MainActor
     func testReload() async {
         let store = TestStore(initialState: WebBrowserFeature.State()) {
             WebBrowserFeature()
@@ -69,6 +70,7 @@ final class TCAWebBrowserTests: XCTestCase {
         }
     }
     
+    @MainActor
     func testDidFail() async {
         let store = TestStore(initialState: WebBrowserFeature.State()) {
             WebBrowserFeature()
