@@ -93,6 +93,7 @@ typealias ViewRepresentable = UIViewRepresentable
 typealias ViewRepresentable = NSViewRepresentable
 #endif
 
+@MainActor
 struct WebView: ViewRepresentable {
     let store: StoreOf<WebFeature>
     
@@ -125,6 +126,7 @@ struct WebView: ViewRepresentable {
 }
 
 extension WebView {
+    @MainActor
     class Coordinator: NSObject, WKNavigationDelegate, WKDownloadDelegate {
         private let store: StoreOf<WebFeature>
         
@@ -178,7 +180,7 @@ extension WebView {
             }.store(in: &cancellables)
         }
         
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        nonisolated func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
             print(#function)
             if navigationAction.shouldPerformDownload {
                 return .download
@@ -187,53 +189,63 @@ extension WebView {
             }
         }
         
-        func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        nonisolated func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
             print(#function)
             download.delegate = self
         }
         
-        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        nonisolated func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
             print(#function)
         }
         
-        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        nonisolated func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             print(#function)
-            store.send(.delegate(.didFail(error: error)))
+            Task { @MainActor in
+                store.send(.delegate(.didFail(error: error)))
+            }
         }
         
-        func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-            print(#function)
-        }
-        
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        nonisolated func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
             print(#function)
         }
         
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        nonisolated func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             print(#function)
-            store.send(.delegate(.didFail(error: error)))
         }
         
-        func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String) async -> URL? {
+        nonisolated func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            print(#function)
+            Task { @MainActor in
+                store.send(.delegate(.didFail(error: error)))
+            }
+        }
+        
+        nonisolated func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String) async -> URL? {
             print(#function)
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(suggestedFilename)
             if FileManager.default.fileExists(atPath: url.path) {
                 try? FileManager.default.removeItem(atPath: url.path)
             }
-            downloadingURL = url
+            Task { @MainActor in
+                downloadingURL = url
+            }
             return url
         }
         
-        func downloadDidFinish(_ download: WKDownload) {
+        nonisolated func downloadDidFinish(_ download: WKDownload) {
             print(#function)
-            if let downloadingURL {
-                store.send(.delegate(.didDownloadFile(at: downloadingURL)))
+            Task { @MainActor in
+                if let downloadingURL {
+                    store.send(.delegate(.didDownloadFile(at: downloadingURL)))
+                }
             }
         }
         
-        func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+        nonisolated func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
             print(#function)
-            store.send(.delegate(.didFail(error: error)))
+            Task { @MainActor in
+                store.send(.delegate(.didFail(error: error)))
+            }
         }
     }
 }
