@@ -41,6 +41,7 @@ struct WebFeature {
         
         case delegate(Delegate)
         
+        @CasePathable
         enum Delegate {
             case didUpdateTitle(String?)
             case didUpdateURL(URL?)

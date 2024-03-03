@@ -25,17 +25,17 @@ final class TCAWebBrowserTests: XCTestCase {
             $0.web.command = .loadUrl(url)
         }
         
-        await store.send(.web(.dequeueCommand)) {
+        await store.send(\.web.dequeueCommand) {
             $0.web.command = nil
         }
         
         let newUrl = URL(string: "https://www.yahoo.com")!
-        await store.send(.web(.delegate(.didUpdateURL(newUrl)))) {
+        await store.send(\.web.delegate.didUpdateURL, newUrl) {
             $0.web.url = newUrl
             $0.location = newUrl.absoluteString
         }
         
-        await store.send(.web(.delegate(.didUpdateURL(nil)))) {
+        await store.send(\.web.delegate.didUpdateURL, nil) {
             $0.web.url = nil
         }
     }
@@ -53,7 +53,7 @@ final class TCAWebBrowserTests: XCTestCase {
             $0.web.command = .loadUrl(url)
         }
         
-        await store.send(.web(.delegate(.didUpdateURL(url)))) {
+        await store.send(\.web.delegate.didUpdateURL, url) {
             $0.web.url = url
         }
         await store.send(.reloadButtonTapped) {
@@ -76,7 +76,7 @@ final class TCAWebBrowserTests: XCTestCase {
         
         let error = NSError(domain: "", code: 0)
         
-        await store.send(.web(.delegate(.didFail(error: error)))) {
+        await store.send(\.web.delegate.didFail, error) {
             $0.alert = .didFail(error: error)
         }
     }
